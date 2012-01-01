@@ -1,0 +1,61 @@
+Active Worlds Software Development Kit Version 5.1 (Build 93)
+Copyright © 1998-2006 Activeworlds Inc.
+All Rights Reserved.
+
+
+This package is the Active World SDK (c) Active Worlds, Inc.
+Maintainer:  Andras  andras@andras.net
+
+Files:
+libaw_sdk.51.so.93	- the dynamic load library for the 5.1 Universe.
+Aw.h			- the Header file
+README.sdk		- this file
+license.txt 		- your licence agreement
+libgcc_s.so.1		- some Linux distros doesn't have this file
+test.cpp		- simple greeter bot
+Makefile.sample		- Makefile for the test.cpp bot
+
+
+Dependency:
+GLIBC_2.3
+ldd libaw_sdk.51.so.93:
+        linux-gate.so.1 =>  (0xb7f2f000)
+        libc.so.6 => /lib/libc.so.6 (0xb7be1000)
+        /lib/ld-linux.so.2 (0xb7f30000)
+
+Built with the following flags:
+        gcc -m32 -shared -Wl,-soname,libaw_sdk.51.so -s -o libaw_sdk.51.so.93
+gcc version 4.3.2
+
+
+How to install?
+
+Create a symbolic link to the /usr/lib folder for your favorite shared library folder to the sdk shared library:
+ln -s ~/libaw_sdk.51.so.93 /usr/lib/libaw_sdk.51.so
+
+When compiling, add the following defines to your compiler :
+-D LINUX -D BINDTOIP -m32
+(Use BINDTOIP if you run the bot on a multihomed system with load sharing enabled)
+
+Sample invocation when the link is put into the /usr/lib folder:
+gcc -D BINDTOIP -D LINUX -m32 -o test test.cpp -law_sdk.51 -lstdc++
+
+Sample invocation when you want to use the local copy of the SDK (rename libaw_sdk.51.so.93 to libaw_sdk.51.so in the local folder!):
+gcc -D BINDTOIP -D LINUX -m32 -o test test.cpp -Wl,-rpath,. ./libaw_sdk.51.so -lstdc++
+Sample Makefile:
+#-----------------------------
+CPPFLAGS=-c -D BINDTOIP -D LINUX -m32
+LIB = -law_sdk.51 -lstdc++ -m32
+
+all: test
+
+test: test.o Makefile
+	gcc -o test test.o $(LIB)
+
+test.o: test.cpp Aw.h
+	gcc $(CPPFLAGS) -o test.o test.cpp
+
+#-----------------------------
+
+This sample is included in this package
+
